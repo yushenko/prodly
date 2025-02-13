@@ -3,21 +3,26 @@ package automation.modalPages;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage {
-    private static final By FIRST_NAME_FIELD = By.name("firstname");
-    private static final By LAST_NAME_FIELD = By.name("lastname");
-    private static final String GENDER_CHECKBOX = "//input[contains(@name,'sex')][contains(@value,'%s')]";
-    private static final String EXP_CHECKBOX = "//input[contains(@name,'exp')][contains(@value,'%s')]";
-    private static final By DATE_FIELD = By.xpath("//strong[contains(text(),'Date')]//..//..//input");
+    private static final By FIRST_NAME_FIELD = By.name("name");
+    private static final By EMAIL_FIELD = By.name("email");
+    private static final By MOBILE_FIELD = By.name("mobile");
+    private static final By PICTURE_UPLOAD_BTN = By.name("picture");
+    private static final String genderCheckBox = "//label[text()='%s']/preceding-sibling::input";
+    private static final By SUBJECT_FIELD = By.name("subjects");
+    private static final By DATE_FIELD = By.name("dob");
+    private static final By STATE_DROPDOWN = By.name("state");
+    private static final String country = "//option[@value='%s']";
     private static final String PROFESSION_CHECKBOX = "//input[contains(@name,'profession')][contains(@value,'%s')]";
     private static final String TOOL_CHECKBOX = "//input[contains(@name,'tool')][contains(@value,'%s')]";
     private static final By CONTINENT_FIELD = By.name("continents");
     private static final String SELECT_DROPDOWN_VALUE_LOCATOR = "//option[text()='%s']";
-    private static final By SELENIUM_COMMAND_FIELD = By.name("selenium_commands");
-    private static final By SUBMIT_BUTTON = By.name("submit");
+    private static final By CITY = By.name("city");
+    private static final By SUBMIT_BUTTON = By.xpath("//input[@type='submit']");
 
     protected final WebDriver driver;
 
@@ -28,7 +33,7 @@ public class LoginPage {
 
     public void scrollTo() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("window.scrollBy(0,1000)");
+        js.executeScript("window.scrollBy(0, -10000)");
     }
 
     @Step
@@ -37,20 +42,35 @@ public class LoginPage {
     }
 
     @Step
-    public void inputLastName(String login) {
-        driver.findElement(LAST_NAME_FIELD).sendKeys(login);
+    public void inputEmail(String email) {
+        driver.findElement(EMAIL_FIELD).sendKeys(email);
+    }
+
+    @Step
+    public void inputMobile(String mobile) {
+        driver.findElement(MOBILE_FIELD).sendKeys(mobile);
+    }
+
+    @Step
+    public void uploadPicture(String path) {
+        driver.findElement(PICTURE_UPLOAD_BTN).sendKeys(path);
+    }
+
+    @Step
+    public void inputSubject(String value) {
+        driver.findElement(SUBJECT_FIELD).sendKeys(value);
     }
 
     @Step
     public void chooseGender(String gender) {
-        driver.findElement(By.xpath(String.format(GENDER_CHECKBOX, gender))).click();
+        driver.findElement(By.xpath(String.format(genderCheckBox, gender))).click();
     }
 
     @Step
-    public void chooseExperience(String exp) {
-        scrollTo();
-        driver.findElement(By.xpath(String.format(EXP_CHECKBOX, exp))).click();
+    public void chooseCountry(String value) {
+        driver.findElement(By.xpath(String.format(country, value))).click();
     }
+
 
     @Step
     public void inputDate(String date) {
@@ -68,20 +88,23 @@ public class LoginPage {
     }
 
     @Step
-    public LoginPage chooseDropdownContinentField() {
-        driver.findElement(CONTINENT_FIELD).click();
+    public LoginPage chooseDropdownContinentField() throws InterruptedException {
+        scrollTo();
+        driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
+        Thread.sleep(100);
+        driver.findElement(STATE_DROPDOWN).click();
         return this;
     }
 
     @Step
-    public LoginPage chooseDropdownSeleniumCommandField() {
-        driver.findElement(SELENIUM_COMMAND_FIELD).click();
+    public LoginPage chooseDropdownCity() {
+        driver.findElement(CITY).click();
         return this;
     }
 
     @Step
     public void selectValueInSelectedDropdown(String value) {
-        driver.findElement(By.xpath(String.format(SELECT_DROPDOWN_VALUE_LOCATOR, value))).click();
+        driver.findElement(By.xpath(String.format(country, value))).click();
     }
 
     @Step
